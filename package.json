@@ -1,13 +1,15 @@
 {
   "name": "linkedlinks",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Link Tree Clone",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm install --prefix backend && npm install --include=dev --prefix frontend && npm run build --prefix frontend",
+    "start": "npm install -g @nestjs/cli && nest --version && npm run start --prefix backend"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "module"
 }
