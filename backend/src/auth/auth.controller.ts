@@ -59,6 +59,7 @@ export class AuthController {
       lastName: user.lastName,
       avatarImage: user.avatarImage,
       lastLoggedIn: user.lastLoggedIn,
+      location: user.location,
     };
   }
 
@@ -72,6 +73,12 @@ export class AuthController {
     const session = await this.authService.refresh(user);
     response.cookie('session', session);
     return;
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('availability')
+  async checkUsernameAvailability(@Body() data: { username: string }) {
+    return this.authService.checkUsernameAvailability(data.username);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
