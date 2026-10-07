@@ -20,6 +20,9 @@ export class User {
   bio: string;
 
   @Prop({ type: String })
+  location: string;
+
+  @Prop({ type: String })
   firstName: string;
 
   @Prop({ type: String })

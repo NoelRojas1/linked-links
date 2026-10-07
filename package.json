@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm install --prefix backend && npm install --include=dev --prefix frontend && npm run build --prefix frontend",
-    "start": "npm install -g @nestjs/cli && nest --version && npm run start --prefix backend"
+    "start": "npm install -g @nestjs/cli && nest --version && npm run start --prefix backend",
+    "local:dev:redis": "docker exec -it redis-server redis-cli"
   },
   "keywords": [],
   "author": "",

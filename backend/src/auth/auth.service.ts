@@ -1,4 +1,9 @@
-import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -29,6 +34,39 @@ export class AuthService {
 
     // create session
     return this.getSession(createdUser);
+  }
+
+  async checkUsernameAvailability(username: string) {
+    try {
+      // is this in cache? Someone might have taken it and is completing the registration form
+      const isInCache = await this.cacheManager.get(username);
+      if (isInCache) {
+        return {
+          taken: true,
+        };
+      }
+
+      // check database
+      const isInDatabase = await this.userModel.findOne({ username });
+      if (isInDatabase) {
+        return {
+          taken: true,
+        };
+      }
+
+      await this.cacheManager.set(
+        username,
+        JSON.stringify({ taken: true }),
+        300000,
+      );
+
+      return {
+        taken: false,
+      };
+    } catch (e) {
+      console.error(e);
+      throw new InternalServerErrorException(e);
+    }
   }
 
   async login(loginDto: LoginDto) {
@@ -95,6 +133,7 @@ export class AuthService {
         lastName: user.lastName,
         avatarImage: user.avatarImage,
         lastLoggedIn: user.lastLoggedIn,
+        location: user.location,
       };
 
       const [accessToken, refreshToken] = await Promise.all([
